@@ -1,0 +1,5 @@
+node_modules/
+public/assets/
+data/*.tmp
+.DS_Store
+npm-debug.log*

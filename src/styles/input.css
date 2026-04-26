@@ -1,0 +1,100 @@
+@import "tailwindcss";
+@import "basecoat-css";
+
+@source "../../views/**/*.ejs";
+@source "../**/*.js";
+
+:root {
+  --toreloo-board-bg: #0c66e4;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+[x-cloak] {
+  display: none !important;
+}
+
+.board-scrollbar,
+.list-scrollbar {
+  scrollbar-color: rgb(148 163 184 / 0.8) transparent;
+  scrollbar-width: thin;
+}
+
+.board-scrollbar::-webkit-scrollbar,
+.list-scrollbar::-webkit-scrollbar {
+  height: 12px;
+  width: 10px;
+}
+
+.board-scrollbar::-webkit-scrollbar-thumb,
+.list-scrollbar::-webkit-scrollbar-thumb {
+  background: rgb(148 163 184 / 0.75);
+  border-radius: 999px;
+}
+
+.board-scrollbar::-webkit-scrollbar-track,
+.list-scrollbar::-webkit-scrollbar-track {
+  background: rgb(15 23 42 / 0.18);
+  border-radius: 999px;
+}
+
+.sortable-ghost {
+  opacity: 0.55;
+}
+
+.sortable-chosen {
+  transform: rotate(1deg);
+}
+
+.sortable-drag {
+  cursor: grabbing;
+}
+
+.toreloo-board-bg {
+  background-color: var(--toreloo-board-bg);
+}
+
+.safe-fixed-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-fixed-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.toreloo-card-dialog {
+  width: min(72rem, calc(100vw - 2rem));
+  max-width: none;
+}
+
+.toreloo-card-dialog > div {
+  width: min(72rem, calc(100vw - 2rem));
+  max-width: none;
+}
+
+.toreloo-alert-dialog {
+  width: min(26rem, calc(100vw - 2rem));
+  max-width: none;
+}
+
+.toreloo-alert-dialog > div {
+  width: min(26rem, calc(100vw - 2rem));
+  max-width: none;
+}
+
+.toreloo-card-dialog-panel {
+  max-height: calc(100dvh - 2rem);
+}
+
+.toreloo-card-dialog-content {
+  max-height: calc(100dvh - 11rem);
+}

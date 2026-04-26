@@ -1,0 +1,124 @@
+<article
+  id="list-<%= list.id %>"
+  data-list
+  data-list-id="<%= list.id %>"
+  class="flex max-h-full w-72 shrink-0 flex-col rounded-lg bg-slate-100 p-2 shadow-sm"
+>
+  <header class="mb-2 flex items-center gap-1" data-list-drag-handle>
+    <i data-lucide="grip-vertical" class="size-4 shrink-0 text-slate-500" aria-hidden="true"></i>
+    <form
+      class="min-w-0 flex-1"
+      hx-patch="/lists/<%= list.id %>"
+      hx-target="#list-<%= list.id %>"
+      hx-swap="outerHTML"
+    >
+      <label class="sr-only" for="list-title-<%= list.id %>">リスト名</label>
+      <input
+        id="list-title-<%= list.id %>"
+        name="title"
+        value="<%= list.title %>"
+        class="h-8 border-transparent bg-transparent px-2 text-sm font-semibold hover:bg-white focus:bg-white"
+      />
+    </form>
+    <span class="rounded-full bg-slate-200 px-2 py-0.5 text-xs tabular-nums text-slate-700"><%= list.cards.length %></span>
+
+    <div id="list-menu-<%= list.id %>" class="dropdown-menu" data-no-drag>
+      <button
+        type="button"
+        id="list-menu-trigger-<%= list.id %>"
+        aria-haspopup="menu"
+        aria-controls="list-menu-menu-<%= list.id %>"
+        aria-expanded="false"
+        class="btn-ghost size-8 p-0"
+        aria-label="<%= list.title %> のメニュー"
+      >
+        <i data-lucide="ellipsis" class="size-4"></i>
+      </button>
+      <div id="list-menu-popover-<%= list.id %>" data-popover aria-hidden="true" class="min-w-56">
+        <div role="menu" id="list-menu-menu-<%= list.id %>" aria-labelledby="list-menu-trigger-<%= list.id %>">
+          <div role="heading">リスト操作</div>
+          <button type="button" role="menuitem" class="w-full" onclick="document.getElementById('archive-list-<%= list.id %>').showModal()">
+            このリストをアーカイブ
+          </button>
+          <hr role="separator" />
+          <div role="menuitem" aria-disabled="true">カードをすべて移動</div>
+          <div role="menuitem" aria-disabled="true">カードを並び替え</div>
+        </div>
+      </div>
+    </div>
+
+    <dialog id="archive-list-<%= list.id %>" class="dialog toreloo-alert-dialog" role="alertdialog" aria-labelledby="archive-list-title-<%= list.id %>">
+      <div>
+        <header>
+          <h2 id="archive-list-title-<%= list.id %>" class="text-balance">リストをアーカイブ</h2>
+          <p class="text-pretty">「<%= list.title %>」と中のカードをこのボードから非表示にします。</p>
+        </header>
+        <footer>
+          <button type="button" class="btn-outline" onclick="this.closest('dialog').close()">キャンセル</button>
+          <button
+            type="button"
+            class="btn-destructive"
+            hx-patch="/lists/<%= list.id %>/archive"
+            hx-target="#board-lists"
+            hx-swap="outerHTML"
+            hx-on::after-request="this.closest('dialog').close()"
+          >
+            アーカイブ
+          </button>
+        </footer>
+      </div>
+    </dialog>
+  </header>
+
+  <div
+    data-card-list
+    data-list-id="<%= list.id %>"
+    class="list-scrollbar flex min-h-16 flex-1 flex-col gap-2 overflow-y-auto pb-2"
+  >
+    <% if (list.cards.length === 0) { %>
+      <div class="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-3 py-4 text-sm text-slate-600">
+        条件に合うカードはありません。新しいカードを追加できます。
+      </div>
+    <% } %>
+
+    <% list.cards.forEach((card) => { %>
+      <%- include("./card", { model, card, oob: false }) %>
+    <% }) %>
+  </div>
+
+  <div class="pt-1" x-data="{ adding: false }">
+    <button
+      type="button"
+      class="btn-ghost h-9 w-full justify-start"
+      x-show="!adding"
+      @click="adding = true; $nextTick(() => $refs.cardTitle.focus())"
+    >
+      <i data-lucide="plus" class="size-4"></i>
+      カードを追加
+    </button>
+    <form
+      class="grid gap-2"
+      x-show="adding"
+      hx-post="/lists/<%= list.id %>/cards"
+      hx-target="#list-<%= list.id %>"
+      hx-swap="outerHTML"
+      hx-on::after-request="if (event.detail.successful) adding = false"
+    >
+      <label class="sr-only" for="new-card-title-<%= list.id %>">カード名</label>
+      <textarea
+        id="new-card-title-<%= list.id %>"
+        x-ref="cardTitle"
+        name="title"
+        rows="3"
+        class="resize-none bg-white"
+        placeholder="このカードのタイトルを入力"
+      ></textarea>
+      <div class="flex items-center gap-2">
+        <button type="submit" class="btn">カードを追加</button>
+        <button type="button" class="btn-ghost size-9 p-0" aria-label="キャンセル" @click="adding = false">
+          <i data-lucide="x" class="size-4"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+</article>

@@ -1,0 +1,78 @@
+<section
+  id="board-header"
+  data-board-background="<%= model.board.background %>"
+  data-board-background-value="<%= model.background.value %>"
+  data-board-title="<%= model.board.title %>"
+  class="z-20 border-b border-white/20 bg-slate-950/20 px-3 py-3 text-white shadow-sm"
+  <%= typeof oob !== "undefined" && oob ? 'hx-swap-oob="outerHTML"' : "" %>
+>
+  <div class="flex flex-wrap items-center gap-2">
+    <form
+      class="flex min-w-0 items-center gap-2"
+      hx-patch="/boards/<%= model.board.id %>"
+      hx-target="#board-header"
+      hx-swap="outerHTML"
+    >
+      <label for="board-title" class="sr-only">ボード名</label>
+      <input
+        id="board-title"
+        name="title"
+        value="<%= model.board.title %>"
+        class="h-9 min-w-52 border-transparent bg-white/10 text-lg font-semibold text-white placeholder:text-white/70 hover:bg-white/20 focus:bg-white focus:text-slate-950"
+      />
+      <button type="submit" class="btn-secondary h-9">保存</button>
+    </form>
+
+    <span class="hidden h-6 w-px bg-white/30 sm:block"></span>
+    <span class="rounded-md bg-white/10 px-2 py-1 text-sm"><%= model.board.workspace %></span>
+    <span class="rounded-md bg-white/10 px-2 py-1 text-sm"><%= model.board.visibility %></span>
+
+    <form
+      class="ml-auto flex items-center gap-2"
+      hx-patch="/boards/<%= model.board.id %>"
+      hx-target="#board-header"
+      hx-swap="outerHTML"
+    >
+      <label for="board-background" class="sr-only">背景色</label>
+      <select id="board-background" name="background" class="h-9 min-w-28 bg-white text-slate-950" onchange="this.form.requestSubmit()">
+        <% Object.entries(backgroundOptions).forEach(([key, option]) => { %>
+          <option value="<%= key %>" <%= model.board.background === key ? "selected" : "" %>><%= option.label %></option>
+        <% }) %>
+      </select>
+    </form>
+
+    <button
+      type="button"
+      id="filter-toggle"
+      class="<%= cn("btn-secondary h-9", model.activeFilterCount ? "ring-2 ring-white/70" : "") %>"
+      @click="toggleFilter()"
+      aria-controls="filter-panel"
+      :aria-expanded="filterOpen.toString()"
+    >
+      <i data-lucide="filter" class="size-4"></i>
+      フィルタ
+      <% if (model.activeFilterCount) { %>
+        <span class="rounded-full bg-blue-600 px-2 py-0.5 text-xs text-white tabular-nums"><%= model.activeFilterCount %></span>
+      <% } %>
+    </button>
+  </div>
+
+  <div class="mt-3 flex flex-wrap items-center gap-2 text-sm text-white/90">
+    <span class="inline-flex items-center gap-1 rounded-md bg-white/10 px-2 py-1">
+      <i data-lucide="layout-list" class="size-4"></i>
+      <%= model.lists.length %> リスト
+    </span>
+    <span class="inline-flex items-center gap-1 rounded-md bg-white/10 px-2 py-1">
+      <i data-lucide="credit-card" class="size-4"></i>
+      <%= stats.cards %> カード
+    </span>
+    <span class="inline-flex items-center gap-1 rounded-md bg-white/10 px-2 py-1">
+      <i data-lucide="check-circle-2" class="size-4"></i>
+      <%= stats.complete %> 完了
+    </span>
+    <span class="inline-flex items-center gap-1 rounded-md bg-white/10 px-2 py-1">
+      <i data-lucide="alarm-clock" class="size-4"></i>
+      <%= stats.overdue %> 期限超過
+    </span>
+  </div>
+</section>

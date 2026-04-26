@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title><%= model.board.title %> | Toreloo</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <script type="module" src="/assets/app.js"></script>
+  </head>
+  <body
+    class="h-dvh overflow-hidden bg-slate-100 text-slate-950"
+    style="--toreloo-board-bg: <%= model.background.value %>"
+    x-data="torelooBoard()"
+  >
+    <header class="safe-fixed-top fixed inset-x-0 top-0 z-40 border-b border-slate-200 bg-white shadow-sm">
+      <div class="flex h-14 items-center gap-3 px-3">
+        <a href="/boards/<%= model.board.id %>" class="flex items-center gap-2 rounded-md px-2 py-1.5 text-slate-900 hover:bg-slate-100">
+          <span class="flex size-7 items-center justify-center rounded-md bg-blue-600 text-sm font-bold text-white">T</span>
+          <span class="text-lg font-semibold">Toreloo</span>
+        </a>
+        <nav class="hidden items-center gap-1 text-sm font-medium text-slate-700 md:flex">
+          <a href="/boards/<%= model.board.id %>" class="btn-ghost h-9">ワークスペース</a>
+          <a href="/boards/<%= model.board.id %>#board-lists" class="btn-ghost h-9">最近</a>
+          <span class="inline-flex h-9 items-center rounded-md px-3 text-slate-500">スター付きなし</span>
+        </nav>
+        <div class="ml-auto flex items-center gap-2">
+          <button
+            type="button"
+            class="btn-outline h-9"
+            aria-label="ショートカットを表示"
+            @click="openShortcuts()"
+          >
+            <i data-lucide="keyboard" class="size-4"></i>
+            <span class="hidden sm:inline">ショートカット</span>
+          </button>
+          <button type="button" class="btn h-9" @click="openCreateDialog('card')">
+            <i data-lucide="plus" class="size-4"></i>
+            <span class="hidden sm:inline">作成</span>
+          </button>
+          <div class="flex size-8 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white">自</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="toreloo-board-bg flex h-dvh flex-col pt-[calc(3.5rem+env(safe-area-inset-top))]">
+      <%- include("../partials/board-header", { model, stats }) %>
+
+      <div class="relative flex min-h-0 flex-1">
+        <%- include("../partials/filter-panel", { model }) %>
+        <%- include("../partials/board-lists", { model, stats }) %>
+      </div>
+    </main>
+
+    <div id="card-modal-shell"></div>
+
+    <dialog id="create-dialog" class="dialog w-full sm:max-w-[560px]" aria-labelledby="create-dialog-title">
+      <div>
+        <header>
+          <h2 id="create-dialog-title" class="text-balance">作成</h2>
+          <p class="text-pretty">現在のボードにカードまたはリストを追加します。</p>
+        </header>
+
+        <section class="grid gap-4">
+          <div class="grid grid-cols-2 gap-2 rounded-lg bg-slate-100 p-1">
+            <button
+              type="button"
+              class="h-9 rounded-md text-sm font-medium"
+              :class="createMode === 'card' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-600 hover:bg-white/70'"
+              @click="openCreateDialog('card')"
+            >
+              カード
+            </button>
+            <button
+              type="button"
+              class="h-9 rounded-md text-sm font-medium"
+              :class="createMode === 'list' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-600 hover:bg-white/70'"
+              @click="openCreateDialog('list')"
+            >
+              リスト
+            </button>
+          </div>
+
+          <form
+            class="form grid gap-4"
+            x-show="createMode === 'card'"
+            hx-post="/boards/<%= model.board.id %>/cards"
+            hx-target="#board-lists"
+            hx-swap="outerHTML"
+            hx-on::after-request="if (event.detail.successful) { this.reset(); this.closest('dialog').close(); }"
+          >
+            <label class="grid gap-2">
+              <span>カード名</span>
+              <input data-create-card-title name="title" placeholder="カード名を入力" autocomplete="off" required />
+            </label>
+            <label class="grid gap-2">
+              <span>追加先リスト</span>
+              <select name="listId" required>
+                <% model.lists.forEach((list) => { %>
+                  <option value="<%= list.id %>"><%= list.title %></option>
+                <% }) %>
+              </select>
+            </label>
+            <label class="grid gap-2">
+              <span>説明</span>
+              <textarea name="description" rows="3" class="resize-none" placeholder="必要なら説明を追加"></textarea>
+            </label>
+            <footer class="px-0 pb-0">
+              <button type="button" class="btn-outline" onclick="this.closest('dialog').close()">キャンセル</button>
+              <button type="submit" class="btn">カードを作成</button>
+            </footer>
+          </form>
+
+          <form
+            class="form grid gap-4"
+            x-show="createMode === 'list'"
+            hx-post="/boards/<%= model.board.id %>/lists"
+            hx-target="#board-lists"
+            hx-swap="outerHTML"
+            hx-on::after-request="if (event.detail.successful) { this.reset(); this.closest('dialog').close(); }"
+          >
+            <label class="grid gap-2">
+              <span>リスト名</span>
+              <input data-create-list-title name="title" placeholder="リスト名を入力" autocomplete="off" required />
+            </label>
+            <footer class="px-0 pb-0">
+              <button type="button" class="btn-outline" onclick="this.closest('dialog').close()">キャンセル</button>
+              <button type="submit" class="btn">リストを作成</button>
+            </footer>
+          </form>
+        </section>
+
+        <button type="button" aria-label="閉じる" onclick="this.closest('dialog').close()">
+          <i data-lucide="x" class="size-4"></i>
+        </button>
+      </div>
+    </dialog>
+
+    <dialog id="shortcuts-dialog" class="dialog w-full sm:max-w-[520px]" aria-labelledby="shortcuts-title">
+      <div>
+        <header>
+          <h2 id="shortcuts-title" class="text-balance">キーボードショートカット</h2>
+          <p class="text-pretty">ボード上でよく使う操作を素早く実行できます。</p>
+        </header>
+        <section>
+          <dl class="grid gap-3 text-sm">
+            <div class="flex items-center justify-between gap-4">
+              <dt>フィルタを開く</dt>
+              <dd class="rounded bg-slate-100 px-2 py-1 font-mono tabular-nums">f</dd>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <dt>フィルタを解除</dt>
+              <dd class="rounded bg-slate-100 px-2 py-1 font-mono tabular-nums">x</dd>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <dt>検索欄に移動</dt>
+              <dd class="rounded bg-slate-100 px-2 py-1 font-mono tabular-nums">/</dd>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <dt>この一覧を開く</dt>
+              <dd class="rounded bg-slate-100 px-2 py-1 font-mono tabular-nums">?</dd>
+            </div>
+          </dl>
+        </section>
+        <footer>
+          <button type="button" class="btn" onclick="this.closest('dialog').close()">閉じる</button>
+        </footer>
+        <button type="button" aria-label="閉じる" onclick="this.closest('dialog').close()">
+          <i data-lucide="x" class="size-4"></i>
+        </button>
+      </div>
+    </dialog>
+  </body>
+</html>

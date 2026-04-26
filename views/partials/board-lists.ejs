@@ -1,0 +1,39 @@
+<section
+  id="board-lists"
+  data-board-lists
+  data-board-id="<%= model.board.id %>"
+  class="board-scrollbar flex min-h-0 flex-1 gap-3 overflow-x-auto px-3 py-3"
+>
+  <% model.lists.forEach((list) => { %>
+    <%- include("./list", { model, list }) %>
+  <% }) %>
+
+  <div class="w-72 shrink-0" x-data="{ adding: false }">
+    <button
+      type="button"
+      class="flex w-full items-center gap-2 rounded-lg bg-white/20 px-3 py-3 text-left text-sm font-medium text-white shadow-sm hover:bg-white/30"
+      x-show="!adding"
+      @click="adding = true; $nextTick(() => $refs.title.focus())"
+    >
+      <i data-lucide="plus" class="size-4"></i>
+      もう一つリストを追加
+    </button>
+    <form
+      class="grid gap-2 rounded-lg bg-slate-100 p-2 shadow-sm"
+      x-show="adding"
+      hx-post="/boards/<%= model.board.id %>/lists"
+      hx-target="#board-lists"
+      hx-swap="outerHTML"
+      hx-on::after-request="if (event.detail.successful) adding = false"
+    >
+      <label class="sr-only" for="new-list-title">リスト名</label>
+      <input id="new-list-title" x-ref="title" name="title" placeholder="リスト名を入力" autocomplete="off" />
+      <div class="flex items-center gap-2">
+        <button type="submit" class="btn">リストを追加</button>
+        <button type="button" class="btn-ghost size-9 p-0" aria-label="キャンセル" @click="adding = false">
+          <i data-lucide="x" class="size-4"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+</section>

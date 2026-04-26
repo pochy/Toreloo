@@ -1,0 +1,380 @@
+<%
+  const card = model.card;
+  const progress = checklistProgress(card);
+  const state = dueState(card.dueAt, card.dueComplete);
+  const dueClasses = {
+    later: "bg-slate-100 text-slate-700",
+    soon: "bg-amber-100 text-amber-900",
+    overdue: "bg-red-100 text-red-800",
+    "overdue-long": "bg-rose-100 text-rose-800",
+    complete: "bg-emerald-100 text-emerald-800",
+    none: "bg-slate-100 text-slate-700"
+  };
+%>
+<dialog
+  id="card-detail-dialog"
+  class="dialog toreloo-card-dialog"
+  aria-labelledby="card-title-heading-<%= card.id %>"
+  data-card-detail-dialog
+>
+  <div class="toreloo-card-dialog-panel overflow-hidden p-0">
+    <% if (card.cover) { %>
+      <div class="<%= cn("h-28", coverStyles[card.cover.value] || coverStyles.slate) %>"></div>
+    <% } %>
+
+    <header class="border-b border-slate-200 px-5 py-4">
+      <div class="flex items-start gap-3">
+        <i data-lucide="credit-card" class="mt-1 size-5 shrink-0 text-slate-600"></i>
+        <div class="min-w-0 flex-1">
+          <h2 id="card-title-heading-<%= card.id %>" class="sr-only"><%= card.title %></h2>
+          <form
+            class="grid gap-2"
+            hx-patch="/cards/<%= card.id %>"
+            hx-target="#card-modal-shell"
+            hx-swap="innerHTML"
+          >
+            <label for="detail-title-<%= card.id %>" class="sr-only">カード名</label>
+            <input
+              id="detail-title-<%= card.id %>"
+              name="title"
+              value="<%= card.title %>"
+              class="border-transparent px-0 text-xl font-semibold hover:bg-slate-100 focus:bg-white"
+            />
+            <p class="text-sm text-slate-600">
+              リスト <span class="font-medium text-slate-800"><%= model.list.title %></span> のカード
+            </p>
+          </form>
+        </div>
+        <button type="button" class="btn-ghost size-9 p-0" aria-label="閉じる" onclick="this.closest('dialog').close()">
+          <i data-lucide="x" class="size-4"></i>
+        </button>
+      </div>
+    </header>
+
+    <div class="toreloo-card-dialog-content list-scrollbar grid gap-6 overflow-y-auto px-5 py-5 lg:grid-cols-[minmax(0,1fr)_17rem]">
+      <main class="grid min-w-0 gap-6">
+        <section class="grid gap-3">
+          <div class="flex flex-wrap items-center gap-2">
+            <% model.cardLabels.forEach((label) => { %>
+              <span class="<%= cn("rounded px-2.5 py-1 text-xs font-medium", labelStyles[label.color] || labelStyles.gray) %>"><%= label.title %></span>
+            <% }) %>
+            <% model.cardMembers.forEach((member) => { %>
+              <span class="<%= cn("flex size-8 items-center justify-center rounded-full text-xs font-semibold text-white", member.color) %>" title="<%= member.name %>">
+                <%= member.initials %>
+              </span>
+            <% }) %>
+            <% if (card.dueAt) { %>
+              <span class="<%= cn("inline-flex items-center gap-1 rounded px-2.5 py-1 text-xs tabular-nums", dueClasses[state]) %>">
+                <i data-lucide="clock" class="size-3.5"></i>
+                <%= dueLabel(card.dueAt, card.dueComplete) %>
+              </span>
+            <% } %>
+            <% if (progress.total) { %>
+              <span class="<%= cn("inline-flex items-center gap-1 rounded px-2.5 py-1 text-xs tabular-nums", progress.done === progress.total ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-700") %>">
+                <i data-lucide="square-check-big" class="size-3.5"></i>
+                <%= progress.done %>/<%= progress.total %>
+              </span>
+            <% } %>
+          </div>
+        </section>
+
+        <section class="grid gap-3">
+          <div class="flex items-center gap-2">
+            <i data-lucide="align-left" class="size-5 text-slate-600"></i>
+            <h3 class="text-balance text-base font-semibold">説明</h3>
+          </div>
+          <form
+            class="grid gap-3 pl-7"
+            hx-patch="/cards/<%= card.id %>"
+            hx-target="#card-modal-shell"
+            hx-swap="innerHTML"
+          >
+            <textarea name="description" rows="5" class="resize-none" placeholder="詳しい説明を追加"><%= card.description %></textarea>
+            <button type="submit" class="btn w-fit">説明を保存</button>
+          </form>
+        </section>
+
+        <section class="grid gap-3">
+          <div class="flex items-center gap-2">
+            <i data-lucide="badge-check" class="size-5 text-slate-600"></i>
+            <h3 class="text-balance text-base font-semibold">メタ情報</h3>
+          </div>
+          <form
+            class="grid gap-4 rounded-lg bg-slate-50 p-4"
+            hx-patch="/cards/<%= card.id %>"
+            hx-target="#card-modal-shell"
+            hx-swap="innerHTML"
+          >
+            <input type="hidden" name="labels" value="" />
+            <input type="hidden" name="memberIds" value="" />
+            <div class="grid gap-2">
+              <span class="text-sm font-medium">ラベル</span>
+              <div class="grid gap-2 sm:grid-cols-2">
+                <% model.labels.forEach((label) => { %>
+                  <label class="flex items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm">
+                    <input type="checkbox" name="labels" value="<%= label.id %>" <%= card.labels.includes(label.id) ? "checked" : "" %> />
+                    <span class="<%= cn("size-4 rounded", labelStyles[label.color]?.split(" ")[0] || "bg-slate-300") %>"></span>
+                    <span class="truncate"><%= label.title %></span>
+                  </label>
+                <% }) %>
+              </div>
+            </div>
+
+            <div class="grid gap-2">
+              <span class="text-sm font-medium">メンバー</span>
+              <div class="grid gap-2 sm:grid-cols-2">
+                <% model.members.forEach((member) => { %>
+                  <label class="flex items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm">
+                    <input type="checkbox" name="memberIds" value="<%= member.id %>" <%= card.memberIds.includes(member.id) ? "checked" : "" %> />
+                    <span class="<%= cn("flex size-6 items-center justify-center rounded-full text-xs font-semibold text-white", member.color) %>"><%= member.initials %></span>
+                    <span class="truncate"><%= member.name %></span>
+                  </label>
+                <% }) %>
+              </div>
+            </div>
+
+            <div class="grid gap-3 sm:grid-cols-4">
+              <label class="grid gap-2 text-sm">
+                <span class="font-medium">開始日</span>
+                <input type="date" name="startAt" value="<%= formatDateInput(card.startAt) %>" />
+              </label>
+              <label class="grid gap-2 text-sm">
+                <span class="font-medium">期限</span>
+                <input type="date" name="dueAt" value="<%= formatDateInput(card.dueAt) %>" />
+              </label>
+              <label class="grid gap-2 text-sm">
+                <span class="font-medium">カバー</span>
+                <select name="coverValue" onchange="this.form.requestSubmit()">
+                  <option value="">なし</option>
+                  <% Object.keys(coverStyles).forEach((value) => { %>
+                    <option value="<%= value %>" <%= card.cover?.value === value ? "selected" : "" %>><%= value %></option>
+                  <% }) %>
+                </select>
+              </label>
+              <label class="flex items-end gap-2 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm">
+                <input type="hidden" name="dueComplete" value="false" />
+                <input type="checkbox" name="dueComplete" value="true" <%= card.dueComplete ? "checked" : "" %> />
+                <span>期限を完了</span>
+              </label>
+            </div>
+
+            <button type="submit" class="btn w-fit">メタ情報を保存</button>
+          </form>
+        </section>
+
+        <section class="grid gap-4">
+          <div class="flex items-center gap-2">
+            <i data-lucide="square-check-big" class="size-5 text-slate-600"></i>
+            <h3 class="text-balance text-base font-semibold">チェックリスト</h3>
+          </div>
+          <% if (card.checklists.length === 0) { %>
+            <div class="ml-7 rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-600">
+              チェックリストはまだありません。右側の追加メニューから作成できます。
+            </div>
+          <% } %>
+          <% card.checklists.forEach((checklist) => {
+            const done = checklist.items.filter((item) => item.done).length;
+            const total = checklist.items.length;
+            const pct = total ? Math.round((done / total) * 100) : 0;
+          %>
+            <div class="ml-7 grid gap-3 rounded-lg border border-slate-200 bg-white p-4">
+              <div class="flex items-center justify-between gap-3">
+                <h4 class="font-medium"><%= checklist.title %></h4>
+                <span class="text-sm text-slate-600 tabular-nums"><%= pct %>%</span>
+              </div>
+              <div class="h-2 rounded-full bg-slate-100">
+                <div class="h-2 rounded-full bg-emerald-500" style="width: <%= pct %>%"></div>
+              </div>
+              <div class="grid gap-2">
+                <% checklist.items.forEach((item) => { %>
+                  <form
+                    class="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-slate-50"
+                    hx-patch="/cards/<%= card.id %>/checklists/<%= checklist.id %>/items/<%= item.id %>"
+                    hx-target="#card-modal-shell"
+                    hx-swap="innerHTML"
+                  >
+                    <input type="hidden" name="done" value="<%= item.done ? "false" : "true" %>" />
+                    <button type="submit" class="<%= cn("flex size-5 items-center justify-center rounded border", item.done ? "border-emerald-600 bg-emerald-600 text-white" : "border-slate-300 text-transparent") %>" aria-label="<%= item.done ? "未完了に戻す" : "完了にする" %>">
+                      <i data-lucide="check" class="size-3"></i>
+                    </button>
+                    <span class="<%= cn("text-sm", item.done && "text-slate-500 line-through") %>"><%= item.title %></span>
+                  </form>
+                <% }) %>
+              </div>
+              <form
+                class="flex gap-2"
+                hx-post="/cards/<%= card.id %>/checklists/<%= checklist.id %>/items"
+                hx-target="#card-modal-shell"
+                hx-swap="innerHTML"
+              >
+                <label class="sr-only" for="new-item-<%= checklist.id %>">チェック項目</label>
+                <input id="new-item-<%= checklist.id %>" name="title" placeholder="項目を追加" autocomplete="off" />
+                <button type="submit" class="btn-outline shrink-0">追加</button>
+              </form>
+            </div>
+          <% }) %>
+        </section>
+
+        <section class="grid gap-3">
+          <div class="flex items-center gap-2">
+            <i data-lucide="paperclip" class="size-5 text-slate-600"></i>
+            <h3 class="text-balance text-base font-semibold">添付</h3>
+          </div>
+          <div class="ml-7 grid gap-2">
+            <% if (card.attachments.length === 0) { %>
+              <div class="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-600">
+                添付リンクはまだありません。
+              </div>
+            <% } %>
+            <% card.attachments.forEach((attachment) => { %>
+              <a href="<%= attachment.url %>" target="_blank" rel="noreferrer" class="flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-3 hover:bg-slate-50">
+                <span class="flex size-10 items-center justify-center rounded-md bg-slate-100"><i data-lucide="link" class="size-4"></i></span>
+                <span class="min-w-0">
+                  <span class="block truncate text-sm font-medium"><%= attachment.name %></span>
+                  <span class="block truncate text-xs text-slate-500"><%= attachment.url %></span>
+                </span>
+              </a>
+            <% }) %>
+          </div>
+        </section>
+
+        <section class="grid gap-3">
+          <div class="flex items-center gap-2">
+            <i data-lucide="message-square" class="size-5 text-slate-600"></i>
+            <h3 class="text-balance text-base font-semibold">コメント</h3>
+          </div>
+          <form
+            class="ml-7 grid gap-2 rounded-lg bg-slate-50 p-3"
+            hx-post="/cards/<%= card.id %>/comments"
+            hx-target="#card-modal-shell"
+            hx-swap="innerHTML"
+          >
+            <textarea name="text" rows="3" class="resize-none bg-white" placeholder="コメントを書く"></textarea>
+            <div class="flex items-center gap-2">
+              <select name="memberId" class="max-w-48">
+                <% model.members.forEach((member) => { %>
+                  <option value="<%= member.id %>"><%= member.name %></option>
+                <% }) %>
+              </select>
+              <button type="submit" class="btn">送信</button>
+            </div>
+          </form>
+          <div class="ml-7 grid gap-3">
+            <% card.comments.forEach((comment) => {
+              const member = model.members.find((entry) => entry.id === comment.memberId);
+            %>
+              <article class="grid gap-1">
+                <div class="flex items-center gap-2">
+                  <% if (member) { %>
+                    <span class="<%= cn("flex size-7 items-center justify-center rounded-full text-xs font-semibold text-white", member.color) %>"><%= member.initials %></span>
+                    <span class="text-sm font-semibold"><%= member.name %></span>
+                  <% } %>
+                  <time class="text-xs text-slate-500 tabular-nums"><%= formatDateTime(comment.createdAt) %></time>
+                </div>
+                <p class="text-pretty rounded-lg bg-white p-3 text-sm shadow-sm"><%= comment.text %></p>
+              </article>
+            <% }) %>
+          </div>
+        </section>
+
+        <section class="grid gap-3">
+          <div class="flex items-center gap-2">
+            <i data-lucide="activity" class="size-5 text-slate-600"></i>
+            <h3 class="text-balance text-base font-semibold">アクティビティ</h3>
+          </div>
+          <div class="ml-7 grid gap-2 text-sm text-slate-600">
+            <% if (card.activities.length === 0) { %>
+              <p>アクティビティはまだありません。</p>
+            <% } %>
+            <% card.activities.slice(0, 8).forEach((activity) => { %>
+              <p class="flex items-center gap-2">
+                <i data-lucide="dot" class="size-4"></i>
+                <span><%= activity.text %></span>
+                <time class="ml-auto text-xs tabular-nums"><%= formatDateTime(activity.createdAt) %></time>
+              </p>
+            <% }) %>
+          </div>
+        </section>
+      </main>
+
+      <aside class="grid content-start gap-3">
+        <section class="grid gap-2">
+          <h3 class="text-sm font-semibold text-slate-700">追加</h3>
+          <form
+            class="grid gap-2 rounded-lg border border-slate-200 bg-slate-50 p-3"
+            hx-post="/cards/<%= card.id %>/checklists"
+            hx-target="#card-modal-shell"
+            hx-swap="innerHTML"
+          >
+            <label for="new-checklist-<%= card.id %>" class="text-sm font-medium">チェックリスト</label>
+            <input id="new-checklist-<%= card.id %>" name="title" placeholder="例: 作業項目" />
+            <button type="submit" class="btn-outline justify-start">
+              <i data-lucide="square-check-big" class="size-4"></i>
+              追加
+            </button>
+          </form>
+
+          <form
+            class="grid gap-2 rounded-lg border border-slate-200 bg-slate-50 p-3"
+            hx-post="/cards/<%= card.id %>/attachments"
+            hx-target="#card-modal-shell"
+            hx-swap="innerHTML"
+          >
+            <label for="attachment-name-<%= card.id %>" class="text-sm font-medium">添付リンク</label>
+            <input id="attachment-name-<%= card.id %>" name="name" placeholder="表示名" />
+            <input name="url" type="url" placeholder="https://example.com" />
+            <button type="submit" class="btn-outline justify-start">
+              <i data-lucide="paperclip" class="size-4"></i>
+              添付
+            </button>
+          </form>
+        </section>
+
+        <section class="grid gap-2">
+          <h3 class="text-sm font-semibold text-slate-700">アクション</h3>
+          <button
+            type="button"
+            class="btn-outline justify-start"
+            hx-patch="/cards/<%= card.id %>/archive"
+            hx-target="#board-lists"
+            hx-swap="outerHTML"
+            hx-on::after-request="document.getElementById('card-detail-dialog')?.close(); document.getElementById('card-modal-shell').innerHTML = ''"
+          >
+            <i data-lucide="archive" class="size-4"></i>
+            アーカイブ
+          </button>
+          <button type="button" class="btn-outline justify-start" disabled>
+            <i data-lucide="copy" class="size-4"></i>
+            コピー
+          </button>
+          <button type="button" class="btn-destructive justify-start" onclick="document.getElementById('delete-card-alert-<%= card.id %>').showModal()">
+            <i data-lucide="trash-2" class="size-4"></i>
+            完全に削除
+          </button>
+        </section>
+      </aside>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="delete-card-alert-<%= card.id %>" class="dialog toreloo-alert-dialog" role="alertdialog" aria-labelledby="delete-card-title-<%= card.id %>">
+  <div>
+    <header>
+      <h2 id="delete-card-title-<%= card.id %>" class="text-balance">カードを完全に削除</h2>
+      <p class="text-pretty">「<%= card.title %>」を削除します。この操作は元に戻せません。</p>
+    </header>
+    <footer>
+      <button type="button" class="btn-outline" onclick="this.closest('dialog').close()">キャンセル</button>
+      <button
+        type="button"
+        class="btn-destructive"
+        hx-delete="/cards/<%= card.id %>"
+        hx-target="#board-lists"
+        hx-swap="outerHTML"
+        hx-on::after-request="document.getElementById('card-detail-dialog')?.close(); this.closest('dialog').close(); document.getElementById('card-modal-shell').innerHTML = ''"
+      >
+        削除
+      </button>
+    </footer>
+  </div>
+</dialog>

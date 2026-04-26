@@ -1,0 +1,34 @@
+{
+  "name": "toreloo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:css dev:js dev:server",
+    "dev:server": "node --watch src/server.js",
+    "dev:css": "tailwindcss -i ./src/styles/input.css -o ./public/assets/styles.css --watch",
+    "dev:js": "esbuild src/client.js --bundle --format=esm --outfile=public/assets/app.js --sourcemap --watch",
+    "build": "npm-run-all build:css build:js",
+    "build:css": "tailwindcss -i ./src/styles/input.css -o ./public/assets/styles.css --minify",
+    "build:js": "esbuild src/client.js --bundle --format=esm --outfile=public/assets/app.js --minify",
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "alpinejs": "^3.15.11",
+    "basecoat-css": "^0.3.11",
+    "clsx": "^2.1.1",
+    "ejs": "^3.1.10",
+    "express": "^5.2.1",
+    "htmx.org": "^2.0.10",
+    "lucide": "^1.11.0",
+    "sortablejs": "^1.15.7",
+    "tailwind-merge": "^3.4.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.4",
+    "esbuild": "^0.27.1",
+    "npm-run-all": "^4.1.5",
+    "tailwindcss": "^4.2.4"
+  }
+}

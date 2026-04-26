@@ -1,0 +1,93 @@
+<aside
+  id="filter-panel"
+  class="absolute right-3 top-3 z-30 w-[min(26rem,calc(100vw-1.5rem))] rounded-lg border border-slate-200 bg-white p-4 shadow-lg"
+  x-show="filterOpen"
+  x-cloak
+>
+  <div class="mb-4 flex items-start justify-between gap-3">
+    <div>
+      <h2 class="text-balance text-base font-semibold">カードを絞り込み</h2>
+      <p class="text-pretty text-sm text-slate-600">キーワード、ラベル、メンバー、期限でボード上のカードを探します。</p>
+    </div>
+    <button type="button" class="btn-ghost size-8 p-0" aria-label="フィルタを閉じる" @click="filterOpen = false">
+      <i data-lucide="x" class="size-4"></i>
+    </button>
+  </div>
+
+  <form
+    id="filter-form"
+    class="form grid gap-4"
+    hx-get="/boards/<%= model.board.id %>/lists"
+    hx-target="#board-lists"
+    hx-swap="outerHTML"
+  >
+    <div class="grid gap-2">
+      <label for="board-filter-search">キーワード</label>
+      <input
+        id="board-filter-search"
+        type="search"
+        name="q"
+        value="<%= model.filters.q %>"
+        placeholder="カード名や説明を検索"
+        hx-trigger="keyup changed delay:300ms"
+        oninput="this.form.requestSubmit()"
+      />
+    </div>
+
+    <div class="grid gap-2">
+      <label for="filter-label">ラベル</label>
+      <select id="filter-label" name="label" onchange="this.form.requestSubmit()">
+        <option value="">すべてのラベル</option>
+        <% model.labels.forEach((label) => { %>
+          <option value="<%= label.id %>" <%= model.filters.label === label.id ? "selected" : "" %>><%= label.title %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="grid gap-2">
+      <label for="filter-member">メンバー</label>
+      <select id="filter-member" name="member" onchange="this.form.requestSubmit()">
+        <option value="">すべてのメンバー</option>
+        <% model.members.forEach((member) => { %>
+          <option value="<%= member.id %>" <%= model.filters.member === member.id ? "selected" : "" %>><%= member.name %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+      <div class="grid gap-2">
+        <label for="filter-due">期限</label>
+        <select id="filter-due" name="due" onchange="this.form.requestSubmit()">
+          <option value="">すべて</option>
+          <option value="none" <%= model.filters.due === "none" ? "selected" : "" %>>期限なし</option>
+          <option value="soon" <%= model.filters.due === "soon" ? "selected" : "" %>>24時間以内</option>
+          <option value="overdue" <%= model.filters.due === "overdue" ? "selected" : "" %>>期限超過</option>
+          <option value="complete" <%= model.filters.due === "complete" ? "selected" : "" %>>完了済み</option>
+        </select>
+      </div>
+      <div class="grid gap-2">
+        <label for="filter-status">状態</label>
+        <select id="filter-status" name="status" onchange="this.form.requestSubmit()">
+          <option value="">すべて</option>
+          <option value="open" <%= model.filters.status === "open" ? "selected" : "" %>>未完了</option>
+          <option value="complete" <%= model.filters.status === "complete" ? "selected" : "" %>>完了</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between gap-2">
+      <a
+        id="clear-filters"
+        href="/boards/<%= model.board.id %>/lists"
+        class="btn-outline"
+        hx-get="/boards/<%= model.board.id %>/lists"
+        hx-target="#board-lists"
+        hx-swap="outerHTML"
+        onclick="this.closest('form').reset()"
+      >
+        解除
+      </a>
+      <button type="submit" class="btn">適用</button>
+    </div>
+  </form>
+</aside>

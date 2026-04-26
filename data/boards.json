@@ -1,0 +1,630 @@
+{
+  "boards": [
+    {
+      "id": "board-product",
+      "title": "Toreloo プロダクトボード",
+      "workspace": "ローカルワークスペース",
+      "description": "Trello 風の Kanban ワークフローをローカルで試すためのボードです。",
+      "visibility": "プライベート",
+      "background": "blue",
+      "listIds": [
+        "list-backlog",
+        "list-design",
+        "list-doing",
+        "list-review",
+        "list-done",
+        "list-d9014468"
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "id": "label-product",
+      "boardId": "board-product",
+      "title": "プロダクト",
+      "color": "sky"
+    },
+    {
+      "id": "label-design",
+      "boardId": "board-product",
+      "title": "デザイン",
+      "color": "pink"
+    },
+    {
+      "id": "label-frontend",
+      "boardId": "board-product",
+      "title": "フロントエンド",
+      "color": "emerald"
+    },
+    {
+      "id": "label-risk",
+      "boardId": "board-product",
+      "title": "リスク",
+      "color": "rose"
+    },
+    {
+      "id": "label-docs",
+      "boardId": "board-product",
+      "title": "ドキュメント",
+      "color": "amber"
+    },
+    {
+      "id": "label-ops",
+      "boardId": "board-product",
+      "title": "運用",
+      "color": "violet"
+    }
+  ],
+  "members": [
+    {
+      "id": "member-ao",
+      "name": "青木 美咲",
+      "initials": "青",
+      "color": "bg-blue-600"
+    },
+    {
+      "id": "member-ha",
+      "name": "原田 健",
+      "initials": "原",
+      "color": "bg-emerald-600"
+    },
+    {
+      "id": "member-ki",
+      "name": "木村 蓮",
+      "initials": "木",
+      "color": "bg-amber-600"
+    },
+    {
+      "id": "member-sa",
+      "name": "佐藤 凛",
+      "initials": "佐",
+      "color": "bg-rose-600"
+    }
+  ],
+  "lists": [
+    {
+      "id": "list-backlog",
+      "boardId": "board-product",
+      "title": "Backlog",
+      "archived": false,
+      "cardIds": [
+        "card-research",
+        "card-copy"
+      ]
+    },
+    {
+      "id": "list-design",
+      "boardId": "board-product",
+      "title": "Design",
+      "archived": false,
+      "cardIds": [
+        "card-board-ui",
+        "card-storage"
+      ]
+    },
+    {
+      "id": "list-doing",
+      "boardId": "board-product",
+      "title": "Doing",
+      "archived": false,
+      "cardIds": [
+        "card-dnd",
+        "card-cardback"
+      ]
+    },
+    {
+      "id": "list-review",
+      "boardId": "board-product",
+      "title": "Review",
+      "archived": false,
+      "cardIds": [
+        "card-keyboard",
+        "card-a1f85997"
+      ]
+    },
+    {
+      "id": "list-done",
+      "boardId": "board-product",
+      "title": "Done",
+      "archived": false,
+      "cardIds": [
+        "card-stack"
+      ]
+    },
+    {
+      "id": "list-d9014468",
+      "boardId": "board-product",
+      "title": "っf",
+      "archived": false,
+      "cardIds": [
+        "card-dcc5338b"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "card-research",
+      "listId": "list-backlog",
+      "title": "Trello のカード表面を観察する",
+      "description": "カードカバー、ラベル、バッジ、メンバー、期限表示の密度を再現する。",
+      "cover": {
+        "type": "color",
+        "value": "cyan"
+      },
+      "labels": [
+        "label-product",
+        "label-design"
+      ],
+      "memberIds": [
+        "member-ao",
+        "member-ha"
+      ],
+      "startAt": null,
+      "dueAt": "2026-05-03T09:00:00.000Z",
+      "dueComplete": false,
+      "archived": false,
+      "comments": [
+        {
+          "id": "comment-76df7491",
+          "memberId": "member-ha",
+          "text": "fff",
+          "createdAt": "2026-04-26T18:32:09.720Z"
+        },
+        {
+          "id": "comment-1",
+          "memberId": "member-ao",
+          "text": "公開ページとヘルプ画像から、まずは Board 体験に集中します。",
+          "createdAt": "2026-04-25T02:15:00.000Z"
+        }
+      ],
+      "attachments": [
+        {
+          "id": "attachment-1",
+          "name": "Trello tour",
+          "url": "https://trello.com/tour",
+          "kind": "link"
+        }
+      ],
+      "checklists": [
+        {
+          "id": "checklist-1",
+          "title": "調査項目",
+          "items": [
+            {
+              "id": "item-1",
+              "title": "ボード構造",
+              "done": true,
+              "memberId": "member-ao",
+              "dueAt": null
+            },
+            {
+              "id": "item-2",
+              "title": "カード詳細",
+              "done": true,
+              "memberId": "member-ha",
+              "dueAt": null
+            },
+            {
+              "id": "item-3",
+              "title": "ショートカット",
+              "done": false,
+              "memberId": null,
+              "dueAt": null
+            }
+          ]
+        }
+      ],
+      "activities": [
+        {
+          "id": "activity-b0bfc883",
+          "text": "コメントを追加しました。",
+          "createdAt": "2026-04-26T18:32:09.720Z"
+        },
+        {
+          "id": "activity-1",
+          "text": "青木 美咲がカードを作成しました。",
+          "createdAt": "2026-04-25T02:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "card-copy",
+      "listId": "list-backlog",
+      "title": "空状態と追加導線を日本語で整える",
+      "description": "リストが空のときにも自然に次のカード追加へ進める UI にする。",
+      "cover": null,
+      "labels": [
+        "label-docs"
+      ],
+      "memberIds": [
+        "member-ki"
+      ],
+      "startAt": null,
+      "dueAt": null,
+      "dueComplete": false,
+      "archived": false,
+      "comments": [],
+      "attachments": [],
+      "checklists": [
+        {
+          "id": "checklist-88df7504",
+          "title": "チェックリスト",
+          "items": []
+        },
+        {
+          "id": "checklist-530bc9bf",
+          "title": "チェックリスト",
+          "items": []
+        },
+        {
+          "id": "checklist-d0b09074",
+          "title": "チェックリスト",
+          "items": []
+        },
+        {
+          "id": "checklist-c2b43f9f",
+          "title": "チェックリスト",
+          "items": []
+        }
+      ],
+      "activities": [
+        {
+          "id": "activity-a939d2c7",
+          "text": "チェックリストを追加しました。",
+          "createdAt": "2026-04-26T18:31:46.413Z"
+        },
+        {
+          "id": "activity-badefc8d",
+          "text": "チェックリストを追加しました。",
+          "createdAt": "2026-04-26T18:31:45.966Z"
+        },
+        {
+          "id": "activity-a4537207",
+          "text": "チェックリストを追加しました。",
+          "createdAt": "2026-04-26T18:31:45.415Z"
+        },
+        {
+          "id": "activity-6e065761",
+          "text": "チェックリストを追加しました。",
+          "createdAt": "2026-04-26T18:31:44.161Z"
+        }
+      ]
+    },
+    {
+      "id": "card-board-ui",
+      "listId": "list-design",
+      "title": "横スクロールするボード面を作る",
+      "description": "固定ヘッダー、ボードバー、リストの横スクロール、リスト内の縦スクロールを分離する。",
+      "cover": {
+        "type": "color",
+        "value": "blue"
+      },
+      "labels": [
+        "label-design",
+        "label-frontend"
+      ],
+      "memberIds": [
+        "member-ao",
+        "member-sa"
+      ],
+      "startAt": "2026-04-28T00:00:00.000Z",
+      "dueAt": "2026-04-30T08:30:00.000Z",
+      "dueComplete": false,
+      "archived": false,
+      "comments": [],
+      "attachments": [],
+      "checklists": [
+        {
+          "id": "checklist-2",
+          "title": "UI",
+          "items": [
+            {
+              "id": "item-4",
+              "title": "リスト幅を固定",
+              "done": true,
+              "memberId": null,
+              "dueAt": null
+            },
+            {
+              "id": "item-5",
+              "title": "カードの影と余白を調整",
+              "done": false,
+              "memberId": null,
+              "dueAt": null
+            }
+          ]
+        }
+      ],
+      "activities": []
+    },
+    {
+      "id": "card-cardback",
+      "listId": "list-doing",
+      "title": "カード詳細モーダルを Trello 風にする",
+      "description": "Add メニュー、Actions、コメント、チェックリスト、添付をカード裏面に集約する。",
+      "cover": null,
+      "labels": [
+        "label-design",
+        "label-risk"
+      ],
+      "memberIds": [
+        "member-sa"
+      ],
+      "startAt": null,
+      "dueAt": "2026-05-01T11:00:00.000Z",
+      "dueComplete": false,
+      "archived": false,
+      "comments": [],
+      "attachments": [],
+      "checklists": [],
+      "activities": [
+        {
+          "id": "activity-ec0a14be",
+          "text": "Design から Doing へ移動しました。",
+          "createdAt": "2026-04-26T18:31:27.172Z"
+        }
+      ]
+    },
+    {
+      "id": "card-dnd",
+      "listId": "list-doing",
+      "title": "カードとリストのドラッグ移動を保存する",
+      "description": "SortableJS で同一リスト内と別リスト間の移動を扱い、JSON に順序を永続化する。",
+      "cover": null,
+      "labels": [
+        "label-frontend"
+      ],
+      "memberIds": [
+        "member-ha"
+      ],
+      "startAt": null,
+      "dueAt": "2026-04-27T14:00:00.000Z",
+      "dueComplete": false,
+      "archived": false,
+      "comments": [
+        {
+          "id": "comment-2",
+          "memberId": "member-ha",
+          "text": "drop 後はカードID配列をまとめて送ります。",
+          "createdAt": "2026-04-26T07:30:00.000Z"
+        }
+      ],
+      "attachments": [],
+      "checklists": [],
+      "activities": []
+    },
+    {
+      "id": "card-storage",
+      "listId": "list-design",
+      "title": "JSON 書き込みを atomic にする",
+      "description": "ローカル利用でも壊れにくいように、一時ファイルへ書いて rename する。",
+      "cover": null,
+      "labels": [
+        "label-ops"
+      ],
+      "memberIds": [
+        "member-ki"
+      ],
+      "startAt": null,
+      "dueAt": null,
+      "dueComplete": false,
+      "archived": false,
+      "comments": [],
+      "attachments": [],
+      "checklists": [
+        {
+          "id": "checklist-3",
+          "title": "保存",
+          "items": [
+            {
+              "id": "item-6",
+              "title": "読み込み",
+              "done": true,
+              "memberId": null,
+              "dueAt": null
+            },
+            {
+              "id": "item-7",
+              "title": "検証",
+              "done": false,
+              "memberId": null,
+              "dueAt": null
+            },
+            {
+              "id": "item-029b20e1",
+              "title": "新しい項目",
+              "done": false,
+              "memberId": null,
+              "dueAt": null
+            },
+            {
+              "id": "item-8994f5af",
+              "title": "新しい項目",
+              "done": false,
+              "memberId": null,
+              "dueAt": null
+            }
+          ]
+        }
+      ],
+      "activities": [
+        {
+          "id": "activity-33f2baa8",
+          "text": "Doing から Design へ移動しました。",
+          "createdAt": "2026-04-26T18:31:28.305Z"
+        }
+      ]
+    },
+    {
+      "id": "card-keyboard",
+      "listId": "list-review",
+      "title": "フィルタとショートカットを確認する",
+      "description": "f でフィルタ、x で解除、/ で検索、? でショートカットを開く。",
+      "cover": null,
+      "labels": [
+        "label-frontend",
+        "label-docs"
+      ],
+      "memberIds": [
+        "member-ao"
+      ],
+      "startAt": null,
+      "dueAt": "2026-04-29T05:00:00.000Z",
+      "dueComplete": false,
+      "archived": false,
+      "comments": [],
+      "attachments": [],
+      "checklists": [],
+      "activities": []
+    },
+    {
+      "id": "card-stack",
+      "listId": "list-done",
+      "title": "HTMX / Alpine.js / Tailwind / Basecoat を接続",
+      "description": "指定スタックの依存関係をローカルに束ね、ビルドできるようにする。",
+      "cover": {
+        "type": "color",
+        "value": "emerald"
+      },
+      "labels": [
+        "label-frontend",
+        "label-ops"
+      ],
+      "memberIds": [
+        "member-ha",
+        "member-ki"
+      ],
+      "startAt": null,
+      "dueAt": "2026-04-26T03:00:00.000Z",
+      "dueComplete": true,
+      "archived": false,
+      "comments": [],
+      "attachments": [],
+      "checklists": [],
+      "activities": [
+        {
+          "id": "activity-2",
+          "text": "原田 健が期限を完了にしました。",
+          "createdAt": "2026-04-26T03:10:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "card-dcc5338b",
+      "listId": "list-d9014468",
+      "title": "ww",
+      "description": "っっっっd",
+      "cover": null,
+      "labels": [],
+      "memberIds": [],
+      "startAt": null,
+      "dueAt": null,
+      "dueComplete": false,
+      "archived": false,
+      "comments": [],
+      "attachments": [],
+      "checklists": [],
+      "activities": [
+        {
+          "id": "activity-d15d93bd",
+          "text": "カードを更新しました。",
+          "createdAt": "2026-04-26T18:52:44.966Z"
+        },
+        {
+          "id": "activity-6145e3b8",
+          "text": "カードを作成しました。",
+          "createdAt": "2026-04-26T18:34:16.169Z"
+        }
+      ]
+    },
+    {
+      "id": "card-a1f85997",
+      "listId": "list-review",
+      "title": "aaa",
+      "description": "sSDSD",
+      "cover": {
+        "type": "color",
+        "value": "cyan"
+      },
+      "labels": [
+        "label-product",
+        "label-frontend"
+      ],
+      "memberIds": [
+        "member-ao"
+      ],
+      "startAt": "2026-04-24",
+      "dueAt": null,
+      "dueComplete": false,
+      "archived": false,
+      "comments": [
+        {
+          "id": "comment-1a8a0d08",
+          "memberId": "member-ao",
+          "text": "aaasdd",
+          "createdAt": "2026-04-26T19:01:33.987Z"
+        }
+      ],
+      "attachments": [],
+      "checklists": [
+        {
+          "id": "checklist-04d0574d",
+          "title": "チェックリスト",
+          "items": [
+            {
+              "id": "item-91385dbe",
+              "title": "aasd",
+              "done": true,
+              "memberId": null,
+              "dueAt": null
+            },
+            {
+              "id": "item-31da5979",
+              "title": "sd",
+              "done": false,
+              "memberId": null,
+              "dueAt": null
+            }
+          ]
+        }
+      ],
+      "activities": [
+        {
+          "id": "activity-a18881b3",
+          "text": "Review から Review へ移動しました。",
+          "createdAt": "2026-04-26T19:02:34.332Z"
+        },
+        {
+          "id": "activity-acf7d90e",
+          "text": "カードを更新しました。",
+          "createdAt": "2026-04-26T19:02:07.989Z"
+        },
+        {
+          "id": "activity-55e9fdc0",
+          "text": "チェックリストを追加しました。",
+          "createdAt": "2026-04-26T19:01:41.323Z"
+        },
+        {
+          "id": "activity-c0790c7c",
+          "text": "コメントを追加しました。",
+          "createdAt": "2026-04-26T19:01:33.987Z"
+        },
+        {
+          "id": "activity-908fe979",
+          "text": "カードを更新しました。",
+          "createdAt": "2026-04-26T19:01:29.856Z"
+        },
+        {
+          "id": "activity-3ff1f0da",
+          "text": "カードを更新しました。",
+          "createdAt": "2026-04-26T19:01:23.275Z"
+        },
+        {
+          "id": "activity-904ff311",
+          "text": "カードを作成しました。",
+          "createdAt": "2026-04-26T19:00:58.120Z"
+        }
+      ]
+    }
+  ]
+}
